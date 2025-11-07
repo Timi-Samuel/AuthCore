@@ -1,0 +1,9 @@
+.env
+.dockerignore
+__pycache__/
+*.pyc
+*.db
+documentation.txt
+encrypt_password.py
+practice_emails.py
+secret.key
