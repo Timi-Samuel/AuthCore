@@ -25,6 +25,7 @@ A simple authentication system built with Python and Flask, featuring user regis
 
 ## Project Structure
 AuthCore/
+
 ├── crypto_utils.py        # Utility functions for encryption and decryption
 
 ├── encrypt_password.py    # Script for encrypting passwords
