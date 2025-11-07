@@ -26,14 +26,23 @@ A simple authentication system built with Python and Flask, featuring user regis
 ## Project Structure
 AuthCore/
 ├── crypto_utils.py        # Utility functions for encryption and decryption
+
 ├── encrypt_password.py    # Script for encrypting passwords
+
 ├── frontend.py            # CLI-based frontend for interacting with the app
+
 ├── main.py                # Main Flask application
+
 ├── model.py               # Database models and ORM setup
+
 ├── practice_emails.py     # Test email addresses for development
+
 ├── secret.key             # Encryption key (not pushed to GitHub)
+
 ├── requirements.txt       # Python dependencies
+
 ├── .gitignore             # Files ignored by Git
+
 └── README.md              # Project documentation
 
 ---
