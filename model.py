@@ -23,7 +23,7 @@ class User(Base):
 # Verification codes table definition
 
 
-class VerificationCodes(Base):
+class VerificationCodesTable(Base):
     __tablename__ = 'verification_codes'  # Table name in the database
     id = Column(Integer, primary_key=True)  # Auto-incrementing primary key
     email = Column(String)  # User email
