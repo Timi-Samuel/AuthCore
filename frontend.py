@@ -48,22 +48,13 @@ class AuthService:
         else:
             return response.json()['message']
 
-    def register_with_verification(self):
+    def register_with_verification(self, verification_code):
         if self.is_password_strong(self.password):
-            verification_sent = self.send_verification_code()
-            if verification_sent == 'Conflict':
-                return 'User already exists'
-            # Prompt user to enter the verification code received via email
-            verification_code_input = input(
-                "Enter verification code (sent to email you entered): ")
-            if verification_sent:
-                added = self.register_user(verification_code_input)
-                if added == "Account created successfully":
-                    return 'Verification Successful'
-                else:
-                    return f'Failed: {added}'
+            added = self.register_user(verification_code)
+            if added == "Account created successfully":
+                return 'Verification Successful'
             else:
-                return 'Account verification failed'
+                return f'Failed: {added}'
         else:
             # Password does not meet criteria
             return "Invalid password."
@@ -74,7 +65,14 @@ class Client:
     def handle_register(self):
         email, password = prompt_credentials()
         auth_service = AuthService(email, password, base_url)
-        return auth_service.register_with_verification()
+        # auth_service.send_verification_code()
+        verification_sent = auth_service.send_verification_code()
+        if verification_sent == 'Conflict':
+            return 'User already exists'
+        elif verification_sent != 'Success':
+            return f"Failed to send verification code: {verification_sent}"
+        code = input("Enter verification code sent to your email: ")
+        return auth_service.register_with_verification(code)
 
     def handle_login(self):
         email, password = prompt_credentials()
