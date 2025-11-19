@@ -94,7 +94,7 @@ class UserService:
         self.email = email
         self.password = password
         self.code = code
-        self.crypto_service = CryptoService()
+        self.crypto_service = CryptoService('secret.key')
 
     # Check if a user already exists in the database
     def user_exists(self):

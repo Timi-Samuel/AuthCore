@@ -1,24 +1,22 @@
 import requests
 import re
-from passlib.hash import bcrypt
 
 # Base URL for the backend API
 base_url = 'http://127.0.0.1:5001/users'
 
 
-class UserClient:
-    # Initialize UserClient with email, password, and backend URL
-    def __init__(self, user_email, user_password, url):
+class AuthService:
+    def __init__(self, email, password, url):
+        self.email = email
+        self.password = password
         self.url = url
-        self.email = user_email
-        self.password = user_password
 
     # Validate password strength using regex
     def is_password_strong(self, password):
         pattern = r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$'
         return bool(re.match(pattern, password))
 
-    # Send POST request to add a new user to the backend
+        # Send POST request to add a new user to the backend
     def register_user(self, code):
         url = self.url + '/add'
         response = requests.post(
@@ -50,11 +48,10 @@ class UserClient:
         else:
             return response.json()['message']
 
-    # Main logic to add user to database after verification
     def register_with_verification(self):
         if self.is_password_strong(self.password):
             verification_sent = self.send_verification_code()
-            if verification_sent == 'User already exists':
+            if verification_sent == 'Conflict':
                 return 'User already exists'
             # Prompt user to enter the verification code received via email
             verification_code_input = input(
@@ -71,6 +68,50 @@ class UserClient:
             # Password does not meet criteria
             return "Invalid password."
 
+
+class Client:
+
+    def handle_register(self):
+        email, password = prompt_credentials()
+        auth_service = AuthService(email, password, base_url)
+        return auth_service.register_with_verification()
+
+    def handle_login(self):
+        email, password = prompt_credentials()
+        auth_service = AuthService(email, password, base_url)
+        return auth_service.login_user()
+
+    def show_menu(self):
+
+        # Dictionary of available options for the CLI menu
+        menu_options = {
+            "1": "Sign up",
+            "2": "Login",
+            "3": "Exit"
+        }
+
+        while True:
+            print("Welcome to the application home. Choose an option:")
+            # Display menu options
+            for key, value in menu_options.items():
+                print(f"{key}. {value}")
+
+            choice = input("Enter choice here: ").strip()
+
+            if choice == "1":
+                # Sign up flow
+                print(self.handle_register(), "\n")
+            elif choice == "2":
+                # Login flow
+                print(self.handle_login(), "\n")
+            elif choice == "3":
+                # Exit the program
+                print("Bye!\n")
+                break
+            else:
+                # Handle invalid input
+                print("Invalid option. Please enter 1, 2, or 3.\n")
+
 # Helper function to get email and password input from user
 
 
@@ -83,38 +124,8 @@ def prompt_credentials():
 
 
 def run_cli():
-    # Dictionary of available options for the CLI menu
-    menu_options = {
-        "1": "Sign up",
-        "2": "Login",
-        "3": "Exit"
-    }
-
-    while True:
-        print("Welcome to the application home. Choose an option:")
-        # Display menu options
-        for key, value in menu_options.items():
-            print(f"{key}. {value}")
-
-        choice = input("Enter choice here: ").strip()
-
-        if choice == "1":
-            # Sign up flow
-            email, password = prompt_credentials()
-            user_client = UserClient(email, password, base_url)
-            print(user_client.register_with_verification(), "\n")
-        elif choice == "2":
-            # Login flow
-            email, password = prompt_credentials()
-            user_client = UserClient(email, password, base_url)
-            print(user_client.login_user(), "\n")
-        elif choice == "3":
-            # Exit the program
-            print("Bye!\n")
-            break
-        else:
-            # Handle invalid input
-            print("Invalid option. Please enter 1, 2, or 3.\n")
+    client = Client()
+    client.show_menu()
 
 
 # Entry point for the script
