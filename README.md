@@ -22,7 +22,7 @@ A simple authentication system built with Python and Flask, featuring user regis
 - Password encryption using symmetric encryption (Fernet) and secure hashing (bcrypt or bcrypt_sha256)
 - Modular and maintainable code structure
 - SQLite database for local development
-- CLI frontend for quick testing and interaction
+- Tkinter frontend for quick testing and interaction
 
 ---
 
