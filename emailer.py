@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from crypto_utils import CryptoService
 from custom_exceptions import UserAlreadyExistsError, UserNotFoundError, InvalidVerificationCodeError, PasswordIncorrectError
-from model import session, VerificationCodesTable
+from model import DBOperations
 from utiltools import UtilTools
 
 
@@ -24,9 +24,13 @@ class Emailer:
         return email, password
 
         # Send verification email to user with a randomly generated code
-    def send_verification_code_email(self, subject):
-        if self.user_service.user_exists():
-            raise UserAlreadyExistsError("User already exists")
+    def send_verification_code_email(self, subject="Verify your email", send_reset_to_verified_user=None):
+        if not send_reset_to_verified_user:
+            if self.user_service.user_exists():
+                raise UserAlreadyExistsError("User already exists")
+
+        if not self.user_service.user_exists:
+            raise UserNotFoundError
 
         sender_email, app_password = self.get_sender_credentials()  # Get sender credentials
 
@@ -51,8 +55,7 @@ class Emailer:
 
         # Record verification attempt in database
         timestamp = UtilTools.current_time()
-        user_verifcation_attempt = VerificationCodesTable(
-            email=self.user_service.email, password=self.user_service.password, code=verification_number, created_at=timestamp)
-        session.add(user_verifcation_attempt)
-        session.commit()
+        db = DBOperations(
+            email=self.user_service.email, password=self.user_service.password)
+        db.record_verif_attempt(timestamp, verification_number)
         return

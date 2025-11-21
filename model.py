@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer, DateTime
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, Boolean
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Base class for declarative class definitions
@@ -32,9 +32,39 @@ class VerificationCodesTable(Base):
     created_at = Column(DateTime)  # Timestamp when code was created
 
 
+class VerificationLogs(Base):
+    __tablename__ = 'logs'
+    id = Column(Integer, primary_key=True)
+    email = Column(String)  # User email
+    # Is verification still pending or successful?
+    successful = Column(Boolean, default=False)
+    # Timestamp when account was officially verified
+    time_verified = Column(DateTime)
+
+
 # Create a session for interacting with the database
 Session = sessionmaker(bind=engine)
 session = Session()
 
 # Create all tables in the database if they do not exist
 Base.metadata.create_all(engine)
+
+
+class DBOperations:
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
+    def record_verif_attempt(self, timestamp, code):
+        user_verifcation_attempt = VerificationCodesTable(
+            email=self.email, password=self.password, code=code, created_at=timestamp)
+        session.add(user_verifcation_attempt)
+        session.commit()
+        return
+
+    def remove_verification_code(self):
+        target = session.query(VerificationCodesTable).filter_by(
+            email=self.email).all()
+        for i in target:
+            session.delete(i)
+        return
