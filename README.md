@@ -11,6 +11,7 @@ AuthCore was created as a hands-on exploration of how real-world authentication 
 ## Table of Contents
 - [Features](#features)
 - [Project Structure](#project-structure)
+- [Architecture Overview](#architecture-overview)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
 - [User Flow](#user-flow)
@@ -54,8 +55,10 @@ AuthCore/
 
 GUI (Tkinter)
         ↓
+        
 Flask Backend (Auth APIs)
         ↓
+        
 SQLite Database (Encrypted + Hashed Credentials)
 
 ---
