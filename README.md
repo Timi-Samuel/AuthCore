@@ -54,9 +54,11 @@ AuthCore/
 ### Architecture Overview
 
 GUI (Tkinter)
+
         ↓
         
 Flask Backend (Auth APIs)
+
         ↓
         
 SQLite Database (Encrypted + Hashed Credentials)
