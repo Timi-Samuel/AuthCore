@@ -3,6 +3,11 @@ A simple authentication system built with Python and Flask, featuring user regis
 
 ---
 
+### Why This Project Exists
+AuthCore was created as a hands-on exploration of how real-world authentication systems work behind the scenes. Instead of relying on frameworks that abstract everything away, this project intentionally implements core concepts — such as password hashing, encrypted storage, email verification, and user state management — to build a deeper understanding of secure authentication workflows. It serves both as a learning project and a reference implementation for future applications.
+
+---
+
 ## Table of Contents
 - [Features](#features)
 - [Project Structure](#project-structure)
@@ -42,6 +47,16 @@ AuthCore/
 ├── requirements.txt          # Python dependencies  
 ├── .gitignore                # Files ignored by Git  
 └── README.md                 # Project documentation  
+
+---
+
+### Architecture Overview
+
+GUI (Tkinter)
+        ↓
+Flask Backend (Auth APIs)
+        ↓
+SQLite Database (Encrypted + Hashed Credentials)
 
 ---
 
